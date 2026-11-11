@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LogiPro - Gestão Logística</title>
+<link rel="stylesheet" href="css/style.css">
+<script src="https://unpkg.com/lucide@1.71.0/dist/umd/lucide.min.js"></script>
+</head>
+
+<body>
+<!-- TELA DE LOGIN LOGIPRO -->
+<div id="loginScreen" class="login-screen">
+
+    <div class="login-card">
+
+        <div class="login-logo">
+            <i data-lucide="package"></i>
+            <h1>Logi<span>Pro</span></h1>
+        </div>
+
+        <h2>Bem-vindo de volta!</h2>
+        <p>Acesse sua plataforma de gestão logística.</p>
+
+        <form id="loginForm">
+
+            <div class="login-field">
+    <label for="loginEmail">E-mail</label>
+    <div class="input-icon">
+        <i data-lucide="mail"></i>
+        <input
+            type="email"
+            id="loginEmail"
+            placeholder="Digite seu email"
+            required
+        >
+    </div>  
+</div>
+
+<div class="login-field">
+    <label for="loginPassword">Senha</label>
+    <div class="input-icon">
+        <i data-lucide="lock-keyhole"></i>
+        <input
+            type="password"
+            id="loginPassword"
+            placeholder="Digite sua senha"
+            required
+        >
+    </div>
+</div>
+
+            <div id="loginError" class="login-error"></div>
+
+            <button type="submit" class="login-button">
+    <i data-lucide="log-in"></i>
+    Entrar na plataforma
+</button>
+
+            <div class="login-register">
+    <p>Não tem uma conta?</p>
+
+    <button type="button" id="showRegister">
+    <i data-lucide="user-plus"></i>
+    Criar minha conta
+</button>
+</div>
+
+        </form>
+
+        <div class="login-footer">
+            <i data-lucide="truck"></i>
+            LogiPro © 2026 - Gestão Logística
+        </div>
+
+    </div>
+
+</div>
+
+<!-- TELA DE CADASTRO -->
+
+
+<!-- TELA DE CADASTRO -->
+
+<div id="registerScreen" class="login-screen" style="display:none;">
+
+    <div class="login-card">
+
+        <div class="login-logo">
+            <i data-lucide="package"></i>
+            <h1>Logi<span>Pro</span></h1>
+        </div>
+
+        <h2>Crie sua conta!</h2>
+        <p>Cadastre-se para acessar a plataforma.</p>
+
+        <form id="registerForm">
+
+            <!-- Nome completo -->
+            <div class="login-field">
+                <label for="registerName">Nome completo</label>
+
+                <div class="input-icon">
+                    <i data-lucide="user"></i>
+                    <input
+                        type="text"
+                        id="registerName"
+                        placeholder="Seu nome completo"
+                        required
+                    >
+                </div>
+            </div>
+
+            <!-- E-mail -->
+            <div class="login-field">
+                <label for="registerEmail">E-mail</label>
+
+                <div class="input-icon">
+                    <i data-lucide="mail"></i>
+                    <input
+                        type="email"
+                        id="registerEmail"
+                        placeholder="Digite seu email"
+                        required
+                    >
+                </div>
+            </div>
+
+            <!-- Senha -->
+            <div class="login-field">
+                <label for="registerPassword">Senha</label>
+
+                <div class="input-icon">
+                    <i data-lucide="lock-keyhole"></i>
+                    <input
+                        type="password"
+                        id="registerPassword"
+                        placeholder="Mínimo de 8 caracteres"
+                        minlength="8"
+                        required
+                    >
+                </div>
+            </div>
+
+            <!-- Confirmar senha -->
+            <div class="login-field">
+                <label for="confirmPassword">Confirmar senha</label>
+
+                <div class="input-icon">
+                    <i data-lucide="shield-check"></i>
+                    <input
+                        type="password"
+                        id="confirmPassword"
+                        placeholder="Digite a senha novamente"
+                        required
+                    >
+                </div>
+            </div>
+
+            <div id="registerError" class="login-error"></div>
+
+            <!-- Botão cadastrar -->
+            <button type="submit" class="login-button">
+                <i data-lucide="user-plus"></i>
+                Criar minha conta
+            </button>
+
+        </form>
+
+        <!-- Voltar para login -->
+        <div class="login-register">
+
+            <p>Já possui uma conta?</p>
+
+            <button type="button" id="backToLogin">
+                <i data-lucide="arrow-left"></i>
+                Voltar para o login
+            </button>
+
+        </div>
+
+        <div class="login-footer">
+            <i data-lucide="truck"></i>
+            LogiPro © 2026 - Gestão Logística
+        </div>
+
+    </div>
+
+</div>
+
+<div class="app" style="display: none;">
+
+<aside class="sidebar" id="sidebar">
+
+<div class="brand">
+<div class="brand-icon">
+<i data-lucide="package"></i>
+</div>
+<span>Logi<span class="blue">Pro</span></span>
+</div>
+
+<div class="menu-label">MENU PRINCIPAL</div>
+
+<nav>
+<button class="nav-item active" data-page="dashboard">
+<i data-lucide="layout-dashboard"></i> Dashboard
+</button>
+
+<button class="nav-item" data-page="entregas">
+<i data-lucide="truck"></i> Entregas
+</button>
+
+<button class="nav-item" data-page="clientes">
+<i data-lucide="building-2"></i> Clientes
+</button>
+
+<button class="nav-item" data-page="entregadores">
+<i data-lucide="users"></i> Entregadores
+</button>
+
+<button class="nav-item" data-page="financeiro">
+<i data-lucide="wallet"></i> Financeiro
+</button>
+
+<button class="nav-item" data-page="cotacao">
+<i data-lucide="calculator"></i> Cotação de frete
+</button>
+
+<button class="nav-item" data-page="rastreamento">
+<i data-lucide="map-pin"></i> Rastreamento
+</button>
+</nav>
+
+<div class="sidebar-bottom">
+
+    <div class="user-profile">
+        <div class="avatar">AD</div>
+
+        <div>
+            <strong>Administrador</strong>
+            <small>Gestor da operação</small>
+        </div>
+    </div>
+
+</div>
+
+</aside>
+
+<main class="main">
+
+<header class="topbar">
+
+<button class="mobile-menu" id="menuToggle">
+<i data-lucide="menu"></i>
+</button>
+
+<div>
+<h2 id="pageTitle">Dashboard</h2>
+<p id="currentDate"></p>
+</div>
+
+<div class="top-actions">
+
+    <button class="icon-btn">
+        <i data-lucide="bell"></i>
+    </button>
+
+    <div class="top-user" id="topUserAvatar">AD</div>
+
+    <button class="icon-btn" onclick="logout()" title="Sair">
+        <i data-lucide="log-out"></i>
+    </button>
+
+</div>
+
+</header>
+
+<section class="page active" id="dashboard">
+
+<div class="welcome">
+<div>
+<h1>Visão geral da operação</h1>
+<p>Acompanhe o desempenho da sua logística.</p>
+</div>
+
+<button class="primary-btn" onclick="showPage('cotacao')">
++ Nova cotação
+</button>
+</div>
+
+<div class="stats-grid">
+
+    <div class="stat-card">
+        <div class="stat-header">
+            <span>Entregas hoje</span>
+            <i data-lucide="package-check"></i>
+        </div>
+        <h2 id="totalEntregas">0</h2>
+       <small class="positive" id="deliveryComparison">
+    0% vs. ontem
+</small>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-header">
+            <span>Em andamento</span>
+            <i data-lucide="truck"></i>
+        </div>
+        <h2 id="emAndamento">36</h2>
+        <small>Entregas em rota</small>
+    </div>
+
+    <div class="stat-card">
+    <div class="stat-header">
+        <span>Entregadores ativos</span>
+        <i data-lucide="users"></i>
+    </div>
+    <h2 id="totalDrivers">0</h2>
+    <small>Equipe operacional</small>
+</div>
+
+</div>
+
+<div class="panel">
+<h3>Últimas entregas</h3>
+
+<div class="table-scroll">
+<table>
+<thead>
+<tr>
+<th>Código</th>
+<th>Cliente</th>
+<th>Entregador</th>
+<th>Destino</th>
+<th>Valor</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody id="dashboardOrders"></tbody>
+</table>
+</div>
+</div>
+
+</section>
+
+<!-- ================================= -->
+<!-- ENTREGAS -->
+<!-- ================================= -->
+
+<section class="page" id="entregas">
+
+<div class="welcome">
+<div>
+<h1>Gestão de entregas</h1>
+<p>Gerencie todos os pedidos da operação.</p>
+</div>
+
+<button class="primary-btn" onclick="showPage('cotacao')">
++ Nova entrega
+</button>
+</div>
+
+<div class="panel">
+
+<div class="toolbar">
+<input
+type="search"
+id="searchOrders"
+placeholder="Buscar código ou cliente..."
+>
+
+<select id="filterStatus">
+<option value="">Todos os status</option>
+<option value="Pendente">Pendente</option>
+<option value="Em trânsito">Em trânsito</option>
+<option value="Entregue">Entregue</option>
+</select>
+</div>
+
+<div class="table-scroll">
+<table>
+
+<thead>
+<tr>
+<th>Código</th>
+<th>Cliente</th>
+<th>Entregador</th>
+<th>Destino</th>
+<th>Valor</th>
+<th>Status</th>
+<th>Ações</th>
+</tr>
+</thead>
+
+<tbody id="ordersTable"></tbody>
+
+</table>
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ================================= -->
+<!-- CLIENTES -->
+<!-- ================================= -->
+
+<section class="page" id="clientes">
+
+<div class="welcome">
+
+<div>
+<h1>Clientes parceiros</h1>
+<p>Empresas cadastradas na plataforma.</p>
+</div>
+
+<button
+class="primary-btn"
+onclick="openModal('clientModal')"
+>
++ Novo cliente
+</button>
+
+</div>
+
+<div class="panel">
+
+<div class="table-scroll">
+
+<table>
+
+<thead>
+<tr>
+<th>Empresa</th>
+<th>CNPJ</th>
+<th>E-mail</th>
+<th>Pedidos</th>
+</tr>
+</thead>
+
+<tbody id="clientsTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ================================= -->
+<!-- ENTREGADORES -->
+<!-- ================================= -->
+
+<section class="page" id="entregadores">
+
+<div class="welcome">
+
+<div>
+<h1>Equipe de entregadores</h1>
+<p>Gerencie os profissionais da sua frota.</p>
+</div>
+
+<button
+class="primary-btn"
+onclick="openModal('driverModal')"
+>
++ Novo entregador
+</button>
+
+</div>
+
+<div class="panel">
+
+<div class="table-scroll">
+
+<table>
+
+<thead>
+<tr>
+<th>Nome</th>
+<th>Modal</th>
+<th>Telefone</th>
+<th>Status</th>
+</tr>
+</thead>
+
+<tbody id="driversTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ================================= -->
+<!-- FINANCEIRO -->
+<!-- ================================= -->
+
+
+<!-- FINANCEIRO -->
+<section class="page" id="financeiro">
+
+    <div class="welcome">
+        <div>
+            <h1>Financeiro</h1>
+            <p>Controle financeiro baseado nos dados reais do Supabase.</p>
+        </div>
+
+        <button class="primary-btn"
+                onclick="showPage('financeiro')">
+            Atualizar financeiro
+        </button>
+    </div>
+
+    <div class="stats-grid">
+
+        <div class="stat-card">
+            <span>Receita do mês</span>
+            <h2 id="financeRevenue">R$ 0,00</h2>
+            <small>Entregas concluídas</small>
+        </div>
+
+        <div class="stat-card">
+            <span>Despesas do mês</span>
+            <h2 id="financeExpenses">R$ 0,00</h2>
+            <small>Despesas registradas</small>
+        </div>
+
+        <div class="stat-card">
+            <span>Resultado do mês</span>
+            <h2 id="financeResult">R$ 0,00</h2>
+            <small>Receita menos despesas</small>
+        </div>
+
+    </div>
+
+    <!-- CADASTRO DE DESPESAS -->
+
+    <div class="panel">
+
+        <h3>Registrar despesa</h3>
+
+        <form id="expenseForm">
+
+            <div class="form-grid">
+
+                <div class="field">
+                    <label>Descrição</label>
+                    <input
+                        type="text"
+                        id="expenseDescription"
+                        placeholder="Ex: Combustível"
+                        required
+                    >
+                </div>
+
+                <div class="field">
+                    <label>Categoria</label>
+                    <select id="expenseCategory" required>
+                        <option value="Combustível">Combustível</option>
+                        <option value="Manutenção">Manutenção</option>
+                        <option value="Salários">Salários</option>
+                        <option value="Entregadores">Entregadores</option>
+                        <option value="Aluguel">Aluguel</option>
+                        <option value="Outros">Outros</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label>Valor (R$)</label>
+                    <input
+                        type="number"
+                        id="expenseAmount"
+                        min="0.01"
+                        step="0.01"
+                        placeholder="0,00"
+                        required
+                    >
+                </div>
+
+                <div class="field">
+                    <label>Data da despesa</label>
+                    <input
+                        type="date"
+                        id="expenseDate"
+                        required
+                    >
+                </div>
+
+            </div>
+
+            <button class="primary-btn" type="submit">
+                Salvar despesa
+            </button>
+
+        </form>
+
+    </div>
+
+
+
+    <!-- HISTÓRICO DE DESPESAS -->
+
+    <div class="panel">
+
+        <h3>Histórico de despesas</h3>
+
+        <div class="table-scroll">
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Descrição</th>
+                        <th>Categoria</th>
+                        <th>Data</th>
+                        <th>Valor</th>
+                    </tr>
+                </thead>
+
+                <tbody id="expensesTable">
+                    <tr>
+                        <td colspan="4">
+                            Nenhuma despesa registrada.
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================================= -->
+<!-- COTAÇÃO DE FRETE -->
+<!-- ================================= -->
+
+<section class="page" id="cotacao">
+
+<div class="welcome">
+<div>
+<h1>Simulador de frete</h1>
+<p>Calcule o valor estimado da entrega.</p>
+</div>
+</div>
+
+<div class="panel form-panel">
+
+<form id="quoteForm">
+
+<div class="form-grid">
+
+<div class="field">
+<label>CEP de coleta</label>
+<input
+type="text"
+id="originCep"
+placeholder="00000-000"
+maxlength="9"
+required
+>
+</div>
+
+<div class="field">
+<label>CEP de destino</label>
+<input
+type="text"
+id="destinationCep"
+placeholder="00000-000"
+maxlength="9"
+required
+>
+</div>
+
+<div class="field">
+<label>Modal de transporte</label>
+
+<select id="vehicle">
+<option value="moto">Moto</option>
+<option value="carro">Carreta</option>
+<option value="bike">Caminhão</option>
+</select>
+
+</div>
+
+<div class="field">
+<label>Tipo de serviço</label>
+
+<select id="serviceType">
+<option value="normal">Entrega normal</option>
+<option value="express">Entrega expressa</option>
+</select>
+
+</div>
+
+</div>
+
+<button class="primary-btn" type="submit">
+<i data-lucide="calculator"></i>
+Calcular frete
+</button>
+
+</form>
+
+<div id="quoteResult" class="quote-result hidden"></div>
+
+</div>
+
+</section>
+
+
+<section class="page" id="rastreamento">
+
+<div class="welcome">
+<div>
+<h1>Rastreamento de encomendas</h1>
+<p>Consulte o andamento de uma entrega.</p>
+</div>
+</div>
+
+<div class="panel tracking-panel">
+
+<i
+data-lucide="package-search"
+class="tracking-icon">
+</i>
+
+<h3>Onde está sua encomenda?</h3>
+
+<p>
+Digite o código de rastreamento abaixo.
+</p>
+
+<form id="trackingForm">
+
+<input
+type="text"
+id="trackingCode"
+placeholder="Ex: LP1001"
+required
+>
+
+<button class="primary-btn" type="submit">
+Rastrear
+</button>
+
+</form>
+
+<div id="trackingResult"></div>
+
+</div>
+
+</section>
+
+
+<!-- ================================= -->
+<!-- MODAL CADASTRO DE CLIENTE -->
+<!-- ================================= -->
+
+<div class="modal" id="clientModal">
+
+<div class="modal-box">
+
+<button
+class="close-modal"
+onclick="closeModal('clientModal')">
+×
+</button>
+
+<h2>Cadastrar cliente</h2>
+
+<form id="clientForm">
+
+<label>Nome da empresa</label>
+
+<input
+type="text"
+id="clientName"
+placeholder="Nome da empresa"
+required
+>
+
+<label>CNPJ</label>
+
+<input
+type="text"
+id="clientCnpj"
+placeholder="00.000.000/0000-00"
+required
+>
+
+<label>E-mail</label>
+
+<input
+type="email"
+id="clientEmail"
+placeholder="contato@empresa.com"
+required
+>
+
+<button class="primary-btn" type="submit">
+Salvar cliente
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+
+<!-- ================================= -->
+<!-- MODAL CADASTRO DE ENTREGADOR -->
+<!-- ================================= -->
+
+<div class="modal" id="driverModal">
+
+<div class="modal-box">
+
+<button
+class="close-modal"
+onclick="closeModal('driverModal')">
+×
+</button>
+
+<h2>Cadastrar entregador</h2>
+
+<form id="driverForm">
+
+<label>Nome completo</label>
+
+<input
+type="text"
+id="driverName"
+placeholder="Nome do entregador"
+required
+>
+
+<label>Telefone</label>
+
+<input
+type="tel"
+id="driverPhone"
+placeholder="(11) 99999-9999"
+required
+>
+
+<label>Modal de transporte</label>
+
+<select id="driverVehicle">
+
+<option value="Moto">Moto</option>
+<option value="Carro">Carreta</option>
+<option value="Bicicleta">Caminhão</option>
+
+</select>
+
+<button class="primary-btn" type="submit">
+Cadastrar entregador
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+
+<!-- ================================= -->
+<!-- NOTIFICAÇÕES -->
+<!-- ================================= -->
+
+<div id="toast" class="toast"></div>
+
+
+<!-- ================================= -->
+<!-- JAVASCRIPT -->
+<!-- ================================= -->
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    if (window.lucide) {
+        lucide.createIcons();
+    }
+});
+</script>
+
+<script type="module" src="js/script.js"></script>
+<script>
+
+</script>
+<script src="https://unpkg.com/lucide@1.71.0/dist/umd/lucide.min.js"></script>
+
+<script type="module" src="js/script.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    if (window.lucide) {
+        lucide.createIcons();
+    }
+});
+</script>
+</body>
+</html>
