@@ -21,11 +21,11 @@
   flex-shrink: 0;
 }
 
-/* ==========================================
-   CORREÇÃO DO MODAL DE CONFIRMAÇÃO DE EXCLUSÃO
-========================================== */
 
-/* Esconder o modal inicialmente */
+/* =====================================
+   MODAL DE CONFIRMAÇÃO DE EXCLUSÃO
+===================================== */
+
 .delete-overlay {
     position: fixed;
     inset: 0;
@@ -38,39 +38,42 @@
     justify-content: center;
 
     background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(6px);
 
-    z-index: 99999;
     padding: 20px;
+    z-index: 999999;
+
     box-sizing: border-box;
 }
 
-/* Mostrar somente quando clicar em excluir */
+/* MOSTRAR SOMENTE QUANDO ATIVADO */
+
 .delete-overlay.active {
     display: flex !important;
 }
 
-/* Caixa de confirmação */
+/* CAIXA DO MODAL */
+
 .delete-modal {
-    background: #ffffff;
+    background: #fff;
     width: 100%;
     max-width: 420px;
 
-    padding: 30px;
-    border-radius: 16px;
+    padding: 35px 30px;
+    border-radius: 18px;
 
     text-align: center;
 
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.2);
 
-    animation: deleteModalAnimation 0.2s ease;
+    animation: deleteModalAnimation 0.25s ease;
 }
 
-/* Ícone */
 .delete-modal-icon {
-    width: 60px;
-    height: 60px;
+    width: 70px;
+    height: 70px;
 
-    margin: 0 auto 18px;
+    margin: 0 auto 20px;
 
     display: flex;
     align-items: center;
@@ -82,9 +85,79 @@
     border-radius: 50%;
 }
 
-.delete-modal-icon i {
-    width: 28px;
-    height: 28px;
+.delete-modal-icon svg {
+    width: 30px;
+    height: 30px;
+}
+
+.delete-modal h2 {
+    font-size: 23px;
+    color: #1e293b;
+    margin-bottom: 12px;
+}
+
+.delete-modal p {
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1.7;
+    margin-bottom: 25px;
+}
+
+.delete-modal-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.delete-modal-actions button {
+    flex: 1;
+    height: 46px;
+
+    border: none;
+    border-radius: 9px;
+
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.delete-cancel-btn {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.delete-confirm-btn {
+    background: #dc2626;
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.delete-confirm-btn:hover {
+    background: #b91c1c;
+}
+
+@keyframes deleteModalAnimation {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 480px) {
+    .delete-modal {
+        padding: 28px 20px;
+    }
+
+    .delete-modal-actions {
+        flex-direction: column-reverse;
+    }
 }
 
 /* Título */
