@@ -1070,6 +1070,154 @@ function filterOrders() {
 // EXCLUIR REGISTROS DO SUPABASE
 // ==========================================
 
+// ==========================================
+// SISTEMA DE EXCLUSÃO COM CONFIRMAÇÃO
+// ==========================================
+
+let pendingDelete = null;
+
+const deleteModal = document.getElementById("deleteConfirmModal");
+const deleteMessage = document.getElementById("deleteConfirmMessage");
+
+const cancelDeleteButton = document.getElementById("cancelDelete");
+const confirmDeleteButton = document.getElementById("confirmDelete");
+
+// ABRIR MODAL
+
+function deleteRecord(table, id, description) {
+
+    pendingDelete = {
+        table,
+        id,
+        description
+    };
+
+    deleteMessage.textContent =
+        `Tem certeza de que deseja excluir ${description}? Essa ação não poderá ser desfeita.`;
+
+    deleteModal.classList.add("active");
+
+}
+
+// FECHAR MODAL
+
+function closeDeleteModal() {
+
+    deleteModal.classList.remove("active");
+
+    pendingDelete = null;
+
+}
+
+// CANCELAR
+
+cancelDeleteButton.addEventListener("click", closeDeleteModal);
+
+// CLICAR FORA
+
+deleteModal.addEventListener("click", (event) => {
+
+    if (event.target === deleteModal) {
+        closeDeleteModal();
+    }
+
+});
+
+// TECLA ESC
+
+document.addEventListener("keydown", (event) => {
+
+    if (
+        event.key === "Escape" &&
+        deleteModal.classList.contains("active")
+    ) {
+        closeDeleteModal();
+    }
+
+});
+
+// CONFIRMAR EXCLUSÃO
+
+confirmDeleteButton.addEventListener("click", async () => {
+
+    if (!pendingDelete) return;
+
+    const { table, id } = pendingDelete;
+
+    confirmDeleteButton.disabled = true;
+    confirmDeleteButton.textContent = "Excluindo...";
+
+    try {
+
+        const {
+            data: { user },
+            error: authError
+        } = await supabase.auth.getUser();
+
+        if (authError || !user) {
+            throw new Error("Faça login novamente.");
+        }
+
+        const { data, error } = await supabase
+            .from(table)
+            .delete()
+            .eq("id", id)
+            .eq("user_id", user.id)
+            .select("id");
+
+        if (error) throw error;
+
+        if (!data || data.length === 0) {
+            throw new Error("Registro não encontrado ou sem permissão.");
+        }
+
+        if (table === "orders") {
+            orders = orders.filter(item => item.id !== id);
+        }
+
+        if (table === "clients") {
+            clients = clients.filter(item => item.id !== id);
+        }
+
+        if (table === "drivers") {
+            drivers = drivers.filter(item => item.id !== id);
+        }
+
+        if (table === "expenses") {
+            expenses = expenses.filter(item => item.id !== id);
+        }
+
+        closeDeleteModal();
+
+        renderAll();
+
+        showToast("Registro excluído com sucesso!");
+
+    } catch (error) {
+
+        console.error("Erro ao excluir:", error);
+
+        closeDeleteModal();
+
+        showToast("Erro ao excluir: " + error.message);
+
+    } finally {
+
+        confirmDeleteButton.disabled = false;
+
+        confirmDeleteButton.innerHTML =
+            '<i data-lucide="trash-2"></i> Sim, excluir';
+
+        if (window.lucide) {
+            lucide.createIcons();
+        }
+
+    }
+
+});
+
+window.deleteRecord = deleteRecord;
+
 
 // ==========================================
 // MODAL PERSONALIZADO DE EXCLUSÃO
