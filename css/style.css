@@ -21,6 +21,136 @@
   flex-shrink: 0;
 }
 
+/* ==========================================
+   CORREÇÃO DO MODAL DE CONFIRMAÇÃO DE EXCLUSÃO
+========================================== */
+
+/* Esconder o modal inicialmente */
+.delete-overlay {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+
+    display: none !important;
+
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(15, 23, 42, 0.65);
+
+    z-index: 99999;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Mostrar somente quando clicar em excluir */
+.delete-overlay.active {
+    display: flex !important;
+}
+
+/* Caixa de confirmação */
+.delete-modal {
+    background: #ffffff;
+    width: 100%;
+    max-width: 420px;
+
+    padding: 30px;
+    border-radius: 16px;
+
+    text-align: center;
+
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+
+    animation: deleteModalAnimation 0.2s ease;
+}
+
+/* Ícone */
+.delete-modal-icon {
+    width: 60px;
+    height: 60px;
+
+    margin: 0 auto 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #fee2e2;
+    color: #dc2626;
+
+    border-radius: 50%;
+}
+
+.delete-modal-icon i {
+    width: 28px;
+    height: 28px;
+}
+
+/* Título */
+.delete-modal h2 {
+    font-size: 22px;
+    color: #1e293b;
+    margin-bottom: 10px;
+}
+
+/* Mensagem */
+.delete-modal p {
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+/* Botões */
+.delete-modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+.delete-cancel-btn,
+.delete-confirm-btn {
+    padding: 12px 18px;
+    border: none;
+    border-radius: 8px;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.delete-cancel-btn {
+    background: #f1f5f9;
+    color: #334155;
+}
+
+.delete-confirm-btn {
+    background: #dc2626;
+    color: #ffffff;
+}
+
+.delete-confirm-btn:hover {
+    background: #b91c1c;
+}
+
+.delete-cancel-btn:hover {
+    background: #e2e8f0;
+}
+
+@keyframes deleteModalAnimation {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 /* Campos com ícones */
 
 .input-icon {
