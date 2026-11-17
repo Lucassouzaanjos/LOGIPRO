@@ -449,6 +449,46 @@ onclick="openModal('clientModal')"
 
 </section>
 
+<!-- MODAL PERSONALIZADO DE CONFIRMAÇÃO DE EXCLUSÃO -->
+<div class="delete-overlay" id="deleteConfirmModal">
+
+    <div class="delete-modal">
+
+        <div class="delete-modal-icon">
+            <i data-lucide="trash-2"></i>
+        </div>
+
+        <h2>Confirmar exclusão</h2>
+
+        <p id="deleteConfirmMessage">
+            Tem certeza de que deseja excluir este registro?
+        </p>
+
+        <div class="delete-modal-actions">
+
+            <button
+                type="button"
+                class="delete-cancel-btn"
+                id="cancelDelete"
+            >
+                Cancelar
+            </button>
+
+            <button
+                type="button"
+                class="delete-confirm-btn"
+                id="confirmDelete"
+            >
+                <i data-lucide="trash-2"></i>
+                Sim, excluir
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
 
 <!-- ================================= -->
 <!-- ENTREGADORES -->
@@ -662,22 +702,24 @@ onclick="openModal('driverModal')"
 <div class="field">
 <label>CEP de coleta</label>
 <input
-type="text"
-id="originCep"
-placeholder="00000-000"
-maxlength="9"
-required
+    type="text"
+    id="originCep"
+    placeholder="00000-000"
+    maxlength="9"
+    inputmode="numeric"
+    required
 >
 </div>
 
 <div class="field">
 <label>CEP de destino</label>
 <input
-type="text"
-id="destinationCep"
-placeholder="00000-000"
-maxlength="9"
-required
+    type="text"
+    id="destinationCep"
+    placeholder="00000-000"
+    maxlength="9"
+    inputmode="numeric"
+    required
 >
 </div>
 
@@ -792,10 +834,13 @@ required
 <label>CNPJ</label>
 
 <input
-type="text"
-id="clientCnpj"
-placeholder="00.000.000/0000-00"
-required
+    type="text"
+    id="clientCnpj"
+    placeholder="00.000.000/0000-00"
+    maxlength="18"
+    inputmode="numeric"
+    autocomplete="off"
+    required
 >
 
 <label>E-mail</label>
@@ -848,10 +893,13 @@ required
 <label>Telefone</label>
 
 <input
-type="tel"
-id="driverPhone"
-placeholder="(11) 99999-9999"
-required
+    type="tel"
+    id="driverPhone"
+    placeholder="(11) 99999-9999"
+    maxlength="15"
+    inputmode="numeric"
+    autocomplete="off"
+    required
 >
 
 <label>Modal de transporte</label>
