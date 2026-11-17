@@ -1,5 +1,113 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
+// ==========================================
+// MÁSCARAS AUTOMÁTICAS DE NÚMEROS
+// ==========================================
+
+// Remove tudo que não for número
+function somenteNumeros(valor) {
+    return valor.replace(/\D/g, "");
+}
+
+// MÁSCARA DE CNPJ
+function formatarCNPJ(valor) {
+
+    let numeros = somenteNumeros(valor).slice(0, 14);
+
+    numeros = numeros.replace(/^(\d{2})(\d)/, "$1.$2");
+    numeros = numeros.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3");
+    numeros = numeros.replace(/\.(\d{3})(\d)/, ".$1/$2");
+    numeros = numeros.replace(/(\d{4})(\d)/, "$1-$2");
+
+    return numeros;
+}
+
+// MÁSCARA DE TELEFONE
+function formatarTelefone(valor) {
+
+    let numeros = somenteNumeros(valor).slice(0, 11);
+
+    if (numeros.length === 0) return "";
+
+    if (numeros.length <= 2) {
+        return `(${numeros}`;
+    }
+
+    if (numeros.length <= 6) {
+        return numeros.replace(/^(\d{2})(\d+)/, "($1) $2");
+    }
+
+    if (numeros.length <= 10) {
+        return numeros.replace(
+            /^(\d{2})(\d{4})(\d{0,4})$/,
+            "($1) $2-$3"
+        );
+    }
+
+    return numeros.replace(
+        /^(\d{2})(\d{5})(\d{0,4})$/,
+        "($1) $2-$3"
+    );
+}
+
+// MÁSCARA DE CEP
+function formatarCEP(valor) {
+
+    let numeros = somenteNumeros(valor).slice(0, 8);
+
+    return numeros.replace(/^(\d{5})(\d)/, "$1-$2");
+}
+
+// APLICAR MÁSCARAS NOS CAMPOS
+function ativarMascaras() {
+
+    const campos = [
+        {
+            id: "clientCnpj",
+            formatar: formatarCNPJ
+        },
+        {
+            id: "driverPhone",
+            formatar: formatarTelefone
+        },
+        {
+            id: "originCep",
+            formatar: formatarCEP
+        },
+        {
+            id: "destinationCep",
+            formatar: formatarCEP
+        }
+    ];
+
+    campos.forEach(campo => {
+
+        const input = document.getElementById(campo.id);
+
+        if (!input) return;
+
+        input.addEventListener("input", () => {
+
+            input.value = campo.formatar(input.value);
+
+        });
+
+        // Corrigir também os valores colados
+        input.addEventListener("paste", () => {
+
+            setTimeout(() => {
+                input.value = campo.formatar(input.value);
+            }, 0);
+
+        });
+
+    });
+
+}
+
+// Ativar as máscaras
+document.addEventListener("DOMContentLoaded", ativarMascaras);
+
 // CONFIGURAÇÃO DO SUPABASE
 const SUPABASE_URL = "https://elmoqkiygbvnaeuqalhj.supabase.co";
 
@@ -169,7 +277,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Verificar sessão existente
   const { data, error } = await supabase.auth.getSession();
-
   if (error) {
     console.error("Erro ao recuperar sessão:", error);
   }
@@ -963,58 +1070,166 @@ function filterOrders() {
 // EXCLUIR REGISTROS DO SUPABASE
 // ==========================================
 
+
+// ==========================================
+// MODAL PERSONALIZADO DE EXCLUSÃO
+// ==========================================
+
+let pendingDelete = null;
+
+const deleteModal = document.getElementById("deleteConfirmModal");
+const deleteMessage = document.getElementById("deleteConfirmMessage");
+const cancelDeleteButton = document.getElementById("cancelDelete");
+const confirmDeleteButton = document.getElementById("confirmDelete");
+
+// ABRIR CONFIRMAÇÃO
+
 async function deleteRecord(table, id, description) {
-  const confirmed = confirm(
-    `Tem certeza que deseja excluir ${description}? Essa ação não poderá ser desfeita.`,
-  );
 
-  if (!confirmed) return;
+    pendingDelete = {
+        table,
+        id,
+        description
+    };
 
-  try {
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
+    deleteMessage.textContent =
+        `Tem certeza de que deseja excluir ${description}? Essa ação não poderá ser desfeita.`;
 
-    if (authError || !user) {
-      throw new Error("Faça login novamente.");
+    deleteModal.classList.add("active");
+
+    if (window.lucide) {
+        lucide.createIcons();
     }
 
-    const { error } = await supabase
-      .from(table)
-      .delete()
-      .eq("id", id)
-      .eq("user_id", user.id);
-
-    if (error) throw error;
-
-    // Atualizar os dados locais
-    if (table === "orders") {
-      orders = orders.filter((item) => item.id !== id);
-    }
-
-    if (table === "clients") {
-      clients = clients.filter((item) => item.id !== id);
-    }
-
-    if (table === "drivers") {
-      drivers = drivers.filter((item) => item.id !== id);
-    }
-
-    if (table === "expenses") {
-      expenses = expenses.filter((item) => item.id !== id);
-    }
-
-    // Atualizar todas as telas
-    renderAll();
-
-    showToast("Registro excluído com sucesso!");
-  } catch (error) {
-    console.error("Erro ao excluir:", error);
-
-    showToast("Erro ao excluir: " + error.message);
-  }
 }
+
+// FECHAR MODAL
+
+function closeDeleteModal() {
+
+    deleteModal.classList.remove("active");
+
+    pendingDelete = null;
+
+}
+
+// BOTÃO CANCELAR
+
+cancelDeleteButton.addEventListener("click", () => {
+
+    closeDeleteModal();
+
+});
+
+// CLICAR FORA DO MODAL
+
+deleteModal.addEventListener("click", (event) => {
+
+    if (event.target === deleteModal) {
+        closeDeleteModal();
+    }
+
+});
+
+// TECLA ESC
+
+document.addEventListener("keydown", (event) => {
+
+    if (event.key === "Escape" &&
+        deleteModal.classList.contains("active")) {
+
+        closeDeleteModal();
+
+    }
+
+});
+
+// CONFIRMAR EXCLUSÃO
+
+confirmDeleteButton.addEventListener("click", async () => {
+
+    if (!pendingDelete) return;
+
+    const { table, id } = pendingDelete;
+
+    const originalContent = confirmDeleteButton.innerHTML;
+
+    confirmDeleteButton.disabled = true;
+    confirmDeleteButton.textContent = "Excluindo...";
+
+    try {
+
+        const {
+            data: { user },
+            error: authError
+        } = await supabase.auth.getUser();
+
+        if (authError || !user) {
+            throw new Error("Faça login novamente.");
+        }
+
+        const { data, error } = await supabase
+            .from(table)
+            .delete()
+            .eq("id", id)
+            .eq("user_id", user.id)
+            .select("id");
+
+        if (error) throw error;
+
+        if (!data || data.length === 0) {
+            throw new Error("Registro não encontrado ou sem permissão para excluir.");
+        }
+
+        // ATUALIZAR DADOS LOCAIS
+
+        if (table === "orders") {
+            orders = orders.filter(item => item.id !== id);
+        }
+
+        if (table === "clients") {
+            clients = clients.filter(item => item.id !== id);
+        }
+
+        if (table === "drivers") {
+            drivers = drivers.filter(item => item.id !== id);
+        }
+
+        if (table === "expenses") {
+            expenses = expenses.filter(item => item.id !== id);
+        }
+
+        // ATUALIZAR TODAS AS TELAS
+
+        closeDeleteModal();
+
+        renderAll();
+
+        showToast("Registro excluído com sucesso!");
+
+    } catch (error) {
+
+        console.error("Erro ao excluir:", error);
+
+        closeDeleteModal();
+
+        showToast("Erro ao excluir: " + error.message);
+
+    } finally {
+
+        confirmDeleteButton.disabled = false;
+        confirmDeleteButton.innerHTML = originalContent;
+
+        if (window.lucide) {
+            lucide.createIcons();
+        }
+
+    }
+
+});
+
+window.deleteRecord = deleteRecord;
+
 
 window.deleteRecord = deleteRecord;
 
